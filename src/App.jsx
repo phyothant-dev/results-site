@@ -14,8 +14,7 @@ const s = {
   sectionTitle: { fontSize: 11, fontWeight: 600, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: 16, marginBottom: 48 },
   empty: { textAlign: 'center', padding: '40px 0', color: '#ccc', fontSize: 13 },
-  allVotesBox: { border: '1px solid #f0f0f0', borderRadius: 12, padding: 20, flex: 1, minWidth: 280 },
-  twoCol: { display: 'flex', gap: 16, flexWrap: 'wrap' },
+  allVotesBox: { border: '1px solid #f0f0f0', borderRadius: 12, padding: 20 },
 }
 
 export default function App() {
@@ -41,8 +40,6 @@ export default function App() {
     return () => clearInterval(interval)
   }, [fetchResults])
 
-  const cs = projects.filter(p => p.category === 'computer_science').sort((a, b) => b.votes - a.votes)
-  const ct = projects.filter(p => p.category === 'computer_technology').sort((a, b) => b.votes - a.votes)
   const totalVotes = projects.reduce((sum, p) => sum + p.votes, 0)
   const maxVotes = Math.max(...projects.map(p => p.votes), 1)
 
@@ -52,7 +49,7 @@ export default function App() {
 
       <div style={s.content}>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={s.hero}>
-          <h2 style={{ fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: 600, color: '#23A38F', letterSpacing: '-0.02em' }}>Voting Results</h2>
+          <h2 style={{ fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: 600, color: '#23A38F', letterSpacing: '-0.02em' }}>9<sup style={{ fontSize: '0.6em' }}>th</sup> Project Exhibition 2026 Voting Results</h2>
           <p style={s.subtitle}>
             {totalVotes} votes{lastUpdated ? ` · ${lastUpdated.toLocaleTimeString()}` : ''}
           </p>
@@ -65,22 +62,14 @@ export default function App() {
           </div>
         ) : (
           <>
-            <div style={s.twoCol}>
+            <section>
+              <div style={s.sectionTitle}>Vote Distribution</div>
               <div style={s.allVotesBox}>
-                <div style={s.sectionTitle}>Computer Science</div>
-                {cs.map((p, i) => (
+                {projects.sort((a, b) => b.votes - a.votes).map((p, i) => (
                   <VoteBar key={p.id} project={p} maxVotes={maxVotes} index={i} />
                 ))}
-                {cs.length === 0 && <div style={s.empty}>No projects</div>}
               </div>
-              <div style={s.allVotesBox}>
-                <div style={s.sectionTitle}>Computer Technology</div>
-                {ct.map((p, i) => (
-                  <VoteBar key={p.id} project={p} maxVotes={maxVotes} index={i} />
-                ))}
-                {ct.length === 0 && <div style={s.empty}>No projects</div>}
-              </div>
-            </div>
+            </section>
            </>
         )}
       </div>
